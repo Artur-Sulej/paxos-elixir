@@ -3,15 +3,20 @@ defmodule Paxos.Proposer do
 
   ### External API
 
-  def start_link(server_name) do
+  def start_link(proposer_id) do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil, name: __MODULE__)
-    :global.register_name(server_name, pid)
+
+    proposer_id
+    |> build_name()
+    |> :global.register_name(pid)
+
     {:ok, pid}
   end
 
   def run(value) do
     acceptors = Paxos.Registration.get_acceptors()
-    msg = %{id: 1, value: value, type: :prepare_request}
+    id = Paxos.IdGenerator.next_id()
+    msg = %{id: id, value: value, type: :prepare_request}
 
     Enum.each(acceptors, fn acceptor ->
       pid = :global.whereis_name(acceptor)
@@ -23,5 +28,9 @@ defmodule Paxos.Proposer do
 
   def init(args) do
     {:ok, args}
+  end
+
+  defp build_name(proposer_id) do
+    "proposer_#{proposer_id}"
   end
 end

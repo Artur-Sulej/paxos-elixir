@@ -3,9 +3,13 @@ defmodule Paxos.Acceptor do
 
   ### External API
 
-  def start_link(server_name) do
+  def start_link(acceptor_id) do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil, name: __MODULE__)
-    :global.register_name(server_name, pid)
+
+    acceptor_id
+    |> build_name()
+    |> :global.register_name(pid)
+
     {:ok, pid}
   end
 
@@ -13,5 +17,9 @@ defmodule Paxos.Acceptor do
 
   def init(args) do
     {:ok, args}
+  end
+
+  defp build_name(acceptor_id) do
+    "acceptor_#{acceptor_id}"
   end
 end
