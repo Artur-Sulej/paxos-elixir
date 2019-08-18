@@ -4,11 +4,11 @@ defmodule Paxos.Learner do
   ### External API
 
   def start_link(learner_id) do
-    {:ok, pid} = GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+    {:ok, pid} = GenServer.start_link(__MODULE__, [], name: __MODULE__)
 
-    learner_id
-    |> build_name()
-    |> :global.register_name(pid)
+    name = build_name(learner_id)
+    :global.register_name(name, pid)
+    Paxos.Registration.register_learner(name)
 
     {:ok, pid}
   end

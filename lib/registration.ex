@@ -2,7 +2,7 @@ defmodule Paxos.Registration do
   use Agent
   @agent_name {:global, __MODULE__}
 
-  def start_link do
+  def start_link(_opts) do
     Agent.start_link(fn -> %{proposers: [], acceptors: [], learners: []} end, name: @agent_name)
   end
 

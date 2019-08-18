@@ -11,6 +11,8 @@ defmodule Paxos.IdGenerator do
   end
 
   defp step do
-    System.get_env("PROPOSERS_COUNT")
+    "PROPOSERS_COUNT"
+    |> System.get_env()
+    |> String.to_integer()
   end
 end
