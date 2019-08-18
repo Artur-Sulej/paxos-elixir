@@ -1,6 +1,6 @@
 # Paxos
 
-**TODO: Add description**
+Paxos consensus algorithm in distributed Elixir.
 
 ## Installation
 
