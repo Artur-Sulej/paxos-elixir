@@ -30,6 +30,10 @@ defmodule Paxos.Proposer do
     {:ok, args}
   end
 
+  def handle_call(:get_state, _from, current_state) do
+    {:reply, current_state, current_state}
+  end
+
   defp build_name(proposer_id) do
     "proposer_#{proposer_id}"
   end

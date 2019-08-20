@@ -24,6 +24,10 @@ defmodule Paxos.Acceptor do
     {:reply, current_val, current_val}
   end
 
+  def handle_call(:get_state, _from, current_state) do
+    {:reply, current_state, current_state}
+  end
+
   defp build_name(acceptor_id) do
     "acceptor_#{acceptor_id}"
   end
