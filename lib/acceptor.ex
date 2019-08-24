@@ -26,15 +26,13 @@ defmodule Paxos.Acceptor do
       ) do
     IO.puts("---- #{inspect(%{id: id, value: value, type: :prepare_request})} ---")
 
-    {reply, new_state} =
-      if prev_proposed == nil || prev_proposed.id < id do
-        {%{id: id, previous: nil, type: :prepare_response},
-         Map.put(current_state, :proposed, %{id: id, value: value})}
-      else
-        {%{id: id, previous: prev_proposed, type: :prepare_response}, current_state}
-      end
-
-    {:reply, reply, new_state}
+    if prev_proposed == nil || prev_proposed.id < id do
+      reply = %{id: id, previous: prev_proposed, type: :prepare_response}
+      new_state = Map.put(current_state, :proposed, %{id: id, value: value})
+      {:reply, reply, new_state}
+    else
+      {:reply, nil, current_state}
+    end
   end
 
   def handle_call(:get_state, _from, current_state) do
